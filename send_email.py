@@ -112,7 +112,7 @@ def timer():
 	print gap
 	print time.strftime( ISOTIMEFORMAT, time.localtime() )
 	t = threading.Timer(gap, timer)
-	t.start()
+	t.start() 
 
 if __name__ == "__main__":
 	timer()
