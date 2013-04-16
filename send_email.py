@@ -16,6 +16,24 @@ mail_user="fictionupdate"    #用户名
 mail_pass="fictionupdate123"   #口令 
 mail_postfix="126.com"  #发件箱的后缀
 
+import logging
+ 
+# set up logging to file - see previous section for more details
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(name)-8s %(levelname)-8s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    filename='log\myapp.log',
+                    filemode='w')
+# define a Handler which writes INFO messages or higher to the sys.stderr
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+# set a format which is simpler for console use
+formatter = logging.Formatter('%(name)-8s: %(levelname)-8s %(message)s')
+# tell the handler to use this format
+console.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(console)
+
 def send_mail(to_list,sub,content):  
 
     me="hello"+"<"+mail_user+"@"+mail_postfix+">"  
@@ -49,7 +67,8 @@ def parserhtml():
 		for line in file('lastest_chapter.txt'):
 			lst = line.strip()
 			old_chapter = lst.decode('utf-8')
-			print 'old_chapter', old_chapter
+			logging.info('old_chapter: %s', old_chapter)
+			#print 'old_chapter', old_chapter
 
 		for temp in target:
 			img = temp.find('img', {'alt':'置顶'})
@@ -57,7 +76,8 @@ def parserhtml():
 				#link = 'http://tieba.baidu.com' + temp.div.a['href']
 				text =  temp.div.a.string
 				text = text.strip()
-				print 'parser_content', text
+				logging.info('parser_content: %s', text)
+				#print 'parser_content', text
 				pattern = ur'第.+卷.+第.+章'
 				match = re.search(pattern, text)
 				if match:
@@ -65,8 +85,9 @@ def parserhtml():
 					new_chapter = text[match.end():len(text)]
 					new_chapter = new_chapter.strip()
 					if new_chapter != old_chapter:
-						send_mail(mailto_list,"fiction update",text)	
-						print 'update!new_chapter', new_chapter
+						send_mail(mailto_list,"fiction update",text)
+						logging.info('update!new_chapter: %s', new_chapter)	
+						#print 'update!new_chapter', new_chapter
 						file_handle = open ( 'lastest_chapter.txt', 'w')
 						file_handle.write(new_chapter.encode('utf-8'))
 						file_handle.close()
@@ -90,7 +111,9 @@ def timer():
 		gap = 60 * 7
 	if time.localtime(time.time()).tm_hour > 7:
 		gap = 600
-	print 'gap_time', gap, 's'
+
+	logging.info('gap_time: %ss\n', gap)
+	#print 'gap_time', gap, 's'
 	print time.strftime( ISOTIMEFORMAT, time.localtime() )
 	t = threading.Timer(gap, timer)
 	t.start() 
