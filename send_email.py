@@ -61,7 +61,7 @@ def parserhtml():
 				pattern = ur'第.+卷.+第.+章'
 				match = re.search(pattern, text)
 				if match:
-					print match.end()
+					#print match.end()
 					new_chapter = text[match.end():len(text)]
 					new_chapter = new_chapter.strip()
 					if new_chapter != old_chapter:
