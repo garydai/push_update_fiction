@@ -64,10 +64,8 @@ def parserhtml():
 		soup = BeautifulSoup(text)
 		target	= soup.findAll('div', {'class':'threadlist_lz clearfix'})
 		old_chapter = u''
-		for line in file('lastest_chapter.txt'):
-			lst = line.strip()
-			old_chapter = lst.decode('utf-8')
-			logging.info('old_chapter: %s', old_chapter)
+		lst = [ line.strip().replace('\n','').decode('utf-8') for line in file('lastest_chapter.txt')]
+		#logging.info('old_chapter: %s', lst)
 			#print 'old_chapter', old_chapter
 
 		for temp in target:
@@ -78,18 +76,19 @@ def parserhtml():
 				text = text.strip()
 				logging.info('parser_content: %s', text)
 				#print 'parser_content', text
+
 				pattern = ur'第.+卷.+第.+章'
 				match = re.search(pattern, text)
 				if match:
 					#print match.end()
 					new_chapter = text[match.end():len(text)]
 					new_chapter = new_chapter.strip()
-					if new_chapter != old_chapter:
-						send_mail(mailto_list,"fiction update",text)
+					if new_chapter not in lst:
+						#send_mail(mailto_list,"fiction update",text)
 						logging.info('update!new_chapter: %s', new_chapter)	
 						#print 'update!new_chapter', new_chapter
-						file_handle = open ( 'lastest_chapter.txt', 'w')
-						file_handle.write(new_chapter.encode('utf-8'))
+						file_handle = open ( 'lastest_chapter.txt', 'a+')
+						file_handle.write('\n' + new_chapter.encode('utf-8'))
 						file_handle.close()
 			else:
 				break
