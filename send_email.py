@@ -84,7 +84,7 @@ def parserhtml():
 					new_chapter = text[match.end():len(text)]
 					new_chapter = new_chapter.strip()
 					if new_chapter not in lst:
-						#send_mail(mailto_list,"fiction update",text)
+						send_mail(mailto_list,"fiction update",text)
 						logging.info('update!new_chapter: %s', new_chapter)	
 						#print 'update!new_chapter', new_chapter
 						file_handle = open ( 'lastest_chapter.txt', 'a+')
