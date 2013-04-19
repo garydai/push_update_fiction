@@ -107,7 +107,7 @@ def timer():
 	#10分钟
 	gap = 600
 	if time.localtime(time.time()).tm_hour == 0:
-		gap = 60 * 7
+		gap = 60 * 7 * 60
 	if time.localtime(time.time()).tm_hour > 7:
 		gap = 600
 
